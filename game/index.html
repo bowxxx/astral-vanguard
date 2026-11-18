@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ASTRAL VANGUARD</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-mode="title">
+<main id="stage">
+  <canvas id="game" width="1280" height="720" aria-label="Arena ASTRAL VANGUARD"></canvas>
+
+  <!-- ===== HUD ===== -->
+  <div id="hud" aria-live="off">
+    <div class="panel hud-lives"><span class="lbl">Nyawa</span><div id="hud-lives" class="hearts"></div></div>
+
+    <div class="hud-center">
+      <div class="panel hud-score">
+        <div class="score-main"><span class="lbl">Skor</span><b id="hud-score">0000000</b></div>
+        <div class="score-side"><span class="lbl">High Score</span><b id="hud-high">0000000</b></div>
+        <div id="hud-combo" class="combo">x1.00</div>
+      </div>
+      <div id="sector-prog" class="prog" title="Menuju Boss"><i id="sector-prog-fill"></i></div>
+    </div>
+
+    <div class="hud-right">
+      <div class="panel chip"><span class="lbl">Sector</span><b id="hud-sector">1</b></div>
+      <div class="panel chip crystal"><svg viewBox="0 0 20 24" aria-hidden="true"><path d="M10 1 17 12 10 23 3 12Z"/></svg><span class="lbl">Kristal</span><b id="hud-crystals">0</b></div>
+      <button id="btn-pause" class="icon-btn" aria-label="Jeda (P)"><svg viewBox="0 0 20 20"><rect x="4" y="3" width="4" height="14"/><rect x="12" y="3" width="4" height="14"/></svg></button>
+    </div>
+
+    <div id="boss-bar" class="boss-bar">
+      <div class="boss-head"><b id="boss-name">BOSS</b><span id="boss-phase">Fase I</span></div>
+      <div class="boss-track"><i id="boss-fill"></i><u></u><u></u></div>
+    </div>
+
+    <div id="buffs" class="buffs"></div>
+
+    <div class="hud-bl">
+      <div class="dash-wrap" title="Dash (Shift / Q)">
+        <svg viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="24"/><circle id="dash-ring" class="ring-fg dash" cx="30" cy="30" r="24" transform="rotate(-90 30 30)"/></svg>
+        <span>Dash</span>
+      </div>
+      <div id="hud-fire" class="pill on">Auto-fire aktif</div>
+    </div>
+
+    <div id="nova" class="nova" title="Nova Beam (Klik Kanan / E)">
+      <svg viewBox="0 0 110 110">
+        <circle class="ring-bg" cx="55" cy="55" r="46"/>
+        <circle id="nova-ring" class="ring-fg" cx="55" cy="55" r="46" transform="rotate(-90 55 55)"/>
+      </svg>
+      <div class="nova-core"><b id="nova-pct">0%</b><span id="nova-key">Nova</span></div>
+    </div>
+  </div>
+
+  <div id="banner"><b id="banner-main"></b><span id="banner-sub"></span></div>
+  <div id="warning"><b>PERINGATAN</b><span>Sinyal raksasa mendekat</span></div>
+
+  <!-- ===== TITLE ===== -->
+  <section id="screen-title" class="screen">
+    <div class="title-block">
+      <h1 aria-label="Astral Vanguard"><span>ASTRAL</span><span>VANGUARD</span></h1>
+      <p class="tagline">Pertahankan sabuk kristal. Satu pesawat, tanpa batas sektor.</p>
+      <button id="btn-start" class="btn primary">Mulai misi</button>
+      <p class="hs-line">Rekor terbaik <b id="title-high">0</b></p>
+    </div>
+    <dl class="controls">
+      <div><dt>Gerak</dt><dd>WASD / Panah atau ikuti kursor</dd></div>
+      <div><dt>Tembak</dt><dd>Klik kiri tahan · Spasi toggle auto-fire</dd></div>
+      <div><dt>Nova Beam</dt><dd>Klik kanan / E saat gauge penuh</dd></div>
+      <div><dt>Dash</dt><dd>Shift / Q · kebal sesaat</dd></div>
+      <div><dt>Jeda · Suara</dt><dd>P atau Esc · M</dd></div>
+    </dl>
+  </section>
+
+  <!-- ===== UPGRADE ===== -->
+  <section id="screen-upgrade" class="screen">
+    <div class="up-head">
+      <h2 id="up-title">Sector 1 bersih</h2>
+      <p>Pilih satu relic permanen sebelum lompat ke sektor berikutnya. Tekan 1, 2, atau 3.</p>
+    </div>
+    <div id="cards" class="cards"></div>
+  </section>
+
+  <!-- ===== GAME OVER ===== -->
+  <section id="screen-over" class="screen">
+    <h2 class="over-title">Pesawat hancur</h2>
+    <div id="over-record" class="record">Rekor baru</div>
+    <div class="over-stats">
+      <div><span>Skor</span><b id="over-score">0</b></div>
+      <div><span>High Score</span><b id="over-high">0</b></div>
+      <div><span>Sector</span><b id="over-sector">1</b></div>
+      <div><span>Kristal</span><b id="over-crystals">0</b></div>
+      <div><span>Musuh jatuh</span><b id="over-kills">0</b></div>
+      <div><span>Boss</span><b id="over-bosses">0</b></div>
+    </div>
+    <div class="row">
+      <button id="btn-retry" class="btn primary">Terbang lagi</button>
+      <button id="btn-menu" class="btn">Menu utama</button>
+    </div>
+  </section>
+
+  <!-- ===== PAUSE ===== -->
+  <section id="screen-pause" class="screen">
+    <h2>Dijeda</h2>
+    <div class="row">
+      <button id="btn-resume" class="btn primary">Lanjutkan</button>
+      <button id="btn-mute" class="btn">Suara: nyala</button>
+      <button id="btn-quit" class="btn">Keluar ke menu</button>
+    </div>
+  </section>
+</main>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
